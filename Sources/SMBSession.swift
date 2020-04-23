@@ -113,7 +113,7 @@ public class SMBSession {
         }
 
         smb_share_list_destroy(list)
-        shareCount.deallocate(capacity: 1)
+        shareCount.deallocate()
 
         return Result.success(results)
     }
@@ -432,14 +432,14 @@ public class SMBSession {
     }
 
     internal func fileRead(fileId: smb_fd, bufferSize: UInt) -> Result<Data, SMBSessionError> {
-        let buffer = UnsafeMutableRawPointer.allocate(bytes: Int(bufferSize), alignedTo: 1)
+        let buffer = UnsafeMutableRawPointer.allocate(byteCount: Int(bufferSize), alignment: 1)
 
         let bytesRead = smb_fread(self.rawSession, fileId, buffer, Int(bufferSize))
         if bytesRead < 0 {
             return Result.failure(SMBSessionError.unableToConnect)
         } else {
             let data = Data(bytes: buffer, count: bytesRead)
-            buffer.deallocate(bytes: Int(bufferSize), alignedTo: 1)
+            buffer.deallocate()
             return Result.success(data)
         }
     }

@@ -17,11 +17,11 @@ public protocol SessionUploadTaskDelegate: class {
 }
 
 public class SessionUploadTask: SessionTask {
-    var path: SMBPath
-    var fileName: String
-    var uploadExtension: String? // appending .upload to upload file name, then move
-    var fromURL: URL
-    var file: SMBFile?
+    public var path: SMBPath
+    public var fileName: String
+    public var uploadExtension: String? // appending .upload to upload file name, then move
+    public var fromURL: URL
+    public var file: SMBFile?
     public weak var delegate: SessionUploadTaskDelegate?
 
     public init(session: SMBSession,
@@ -192,7 +192,7 @@ public class SessionUploadTask: SessionTask {
         } while (totalBytesWritten < totalByteCount)
 
         pointer.deinitialize(count: chunkSize)
-        pointer.deallocate(capacity: chunkSize)
+        pointer.deallocate()
 
         self.session.fileClose(fileId: fileId)
         fileHandle.closeFile()
